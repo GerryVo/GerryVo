@@ -1,0 +1,57 @@
+from turtle import Turtle, Screen
+import random
+from tkinter import messagebox
+
+
+color_list = ["red", "yellow", "blue", "green", "orange", "purple"]
+names_list = ["galfon", "zhuzhu", "bibi", "penny", "lira", "roko"]
+turtle_list = []
+
+rase_on = False
+
+
+def turtle_create(names):
+    for name in names:
+        name = Turtle(shape="turtle")
+        color = random.choice(color_list)
+        name.color(color)
+        color_list.remove(color)
+        name.speed(10)
+        turtle_list.append(name)
+
+
+def go_to_start(turtles):
+    x = -180
+    y = 125
+    for turtle in turtles:
+        turtle.penup()
+        turtle.goto(x, y)
+        turtle.pendown()
+        y -= 50
+
+
+screen = Screen()
+screen.setup(width=500, height=400)
+bet = screen.textinput(title="Make your bet!", prompt="Which turtle will win the race? Enter a color:").lower()
+if bet not in color_list:
+    bet = screen.textinput(title="Make your bet!",
+                           prompt="Please choose red, yellow, blue, green, orange or purple").lower()
+
+turtle_create(names_list)
+go_to_start(turtle_list)
+if bet:
+    rase_on = True
+
+while rase_on:
+    for turtle in turtle_list:
+        if turtle.xcor() > 180:
+            rase_on = False
+            winner = turtle.pencolor()
+            if winner == bet:
+                messagebox.showinfo("Rase result", f"You've won! The winner is the {winner} turtle.")
+            else:
+                messagebox.showinfo("Rase result", f"You've lost! The winner is the {winner} turtle.")
+        step = random.randint(0, 5)
+        turtle.fd(step)
+
+screen.exitonclick()
